@@ -18,6 +18,14 @@ public class DataInitializer implements CommandLineRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    // Explicit constructor to ensure all dependencies are initialized
+    public DataInitializer(ProductRepository productRepository, UserRepository userRepository,
+                          PasswordEncoder passwordEncoder) {
+        this.productRepository = productRepository;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
     @Override
     public void run(String... args) {
         initializeUsers();

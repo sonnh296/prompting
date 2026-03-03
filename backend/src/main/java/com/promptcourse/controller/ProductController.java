@@ -15,6 +15,11 @@ import java.util.List;
 public class ProductController {
     private final ProductRepository productRepository;
 
+    // Explicit constructor to ensure productRepository is initialized
+    public ProductController(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts() {
         return ResponseEntity.ok(productRepository.findAll());

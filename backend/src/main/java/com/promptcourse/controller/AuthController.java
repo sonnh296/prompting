@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final AuthService authService;
 
+    // Explicit constructor to ensure authService is initialized
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
+
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.ok(authService.register(request));
