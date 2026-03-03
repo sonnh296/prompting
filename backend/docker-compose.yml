@@ -5,6 +5,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: prompt_course_db
+      MYSQL_ROOT_HOST: "%"
     ports:
       - "3306:3306"
     volumes:

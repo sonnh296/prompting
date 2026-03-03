@@ -1,6 +1,11 @@
 -- Script khởi tạo database và data mẫu
 -- Script này sẽ tự động chạy khi MySQL container khởi động lần đầu
 
+-- Cho phép root kết nối từ host (Docker bridge IP 172.x.x.x) khi app chạy ngoài container
+CREATE USER IF NOT EXISTS 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'rootpassword';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+
 USE prompt_course_db;
 
 -- Tạo bảng users nếu chưa có (sẽ được tạo bởi JPA, nhưng đây là backup)

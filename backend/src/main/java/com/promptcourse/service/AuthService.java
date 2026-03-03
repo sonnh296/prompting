@@ -5,9 +5,11 @@ import com.promptcourse.dto.LoginRequest;
 import com.promptcourse.dto.RegisterRequest;
 import com.promptcourse.entity.RefreshToken;
 import com.promptcourse.entity.User;
+import com.promptcourse.exception.ApiException;
 import com.promptcourse.repository.RefreshTokenRepository;
 import com.promptcourse.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,22 +24,14 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    
-    public AuthService(UserRepository userRepository, RefreshTokenRepository refreshTokenRepository, 
-                      PasswordEncoder passwordEncoder, JwtService jwtService) {
-        this.userRepository = userRepository;
-        this.refreshTokenRepository = refreshTokenRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtService = jwtService;
-    }
 
     @Transactional
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("Username already exists");
+            throw new ApiException("Username already exists", HttpStatus.CONFLICT);
         }
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            throw new ApiException("Email already exists", HttpStatus.CONFLICT);
         }
 
         User user = new User();
@@ -54,10 +48,10 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new RuntimeException("Invalid username or password"));
+                .orElseThrow(() -> new ApiException("Invalid username or password", HttpStatus.UNAUTHORIZED));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid username or password");
+            throw new ApiException("Invalid username or password", HttpStatus.UNAUTHORIZED);
         }
 
         String accessToken = jwtService.generateAccessToken(user.getId(), user.getUsername());
@@ -68,11 +62,11 @@ public class AuthService {
 
     public AuthResponse refreshToken(String refreshTokenString) {
         RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshTokenString)
-                .orElseThrow(() -> new RuntimeException("Invalid refresh token"));
+                .orElseThrow(() -> new ApiException("Invalid refresh token", HttpStatus.UNAUTHORIZED));
 
         if (refreshToken.getExpiryDate().isBefore(LocalDateTime.now())) {
             refreshTokenRepository.delete(refreshToken);
-            throw new RuntimeException("Refresh token expired");
+            throw new ApiException("Refresh token expired", HttpStatus.UNAUTHORIZED);
         }
 
         User user = refreshToken.getUser();

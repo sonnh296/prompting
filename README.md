@@ -2,6 +2,16 @@
 
 Dự án này được tạo để dạy khoá học prompt, bao gồm backend Spring Boot và frontend Vue.js.
 
+## Khởi động nhanh (một lệnh)
+
+- **Windows:** double-click `launch.bat` hoặc chạy `launch.bat` trong CMD/PowerShell.
+- **Mac / Linux:** trong terminal chạy:
+  ```bash
+  chmod +x launch.sh   # chỉ cần lần đầu
+  ./launch.sh
+  ```
+  Nhấn **Ctrl+C** để dừng cả Backend và Frontend.
+
 ## Cấu trúc dự án
 
 ```
