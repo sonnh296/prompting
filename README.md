@@ -35,6 +35,8 @@ cd backend
 docker-compose up -d
 ```
 
+   MySQL sẽ tự động chạy script init trong `docker/init.sql` khi container khởi động lần đầu.
+
 2. **Chạy Backend:**
 ```bash
 cd backend
@@ -76,15 +78,22 @@ Response:
 }
 ```
 
-**Đăng nhập:**
+**Đăng nhập (với user mặc định):**
 ```json
 POST /api/auth/login
 {
-  "username": "testuser",
-  "password": "password123"
+  "username": "admin",
+  "password": "admin123"
 }
 
 Response: (tương tự như đăng ký)
+{
+  "accessToken": "eyJhbGc...",
+  "refreshToken": "uuid-token",
+  "tokenType": "Bearer",
+  "userId": 1,
+  "username": "admin"
+}
 ```
 
 **Refresh Token:**
@@ -129,6 +138,33 @@ MySQL được chạy trong Docker với:
 1. **users** - Thông tin người dùng
 2. **products** - Danh sách sản phẩm
 3. **refresh_tokens** - Refresh tokens của người dùng
+
+### Data mẫu tự động
+
+Khi khởi động backend lần đầu, hệ thống sẽ tự động tạo:
+
+#### Users mặc định (để test):
+- **admin** / **admin123** (email: admin@example.com)
+- **testuser** / **password123** (email: test@example.com)
+- **demo** / **demo123** (email: demo@example.com)
+
+#### 10 Sản phẩm mẫu:
+1. Laptop Dell XPS 15 - 25,000,000 VNĐ
+2. iPhone 15 Pro - 28,000,000 VNĐ
+3. Samsung Galaxy S24 - 22,000,000 VNĐ
+4. MacBook Pro M3 - 45,000,000 VNĐ
+5. AirPods Pro 2 - 6,500,000 VNĐ
+6. iPad Pro 12.9 inch - 32,000,000 VNĐ
+7. Sony WH-1000XM5 - 8,500,000 VNĐ
+8. Samsung Galaxy Watch 6 - 7,500,000 VNĐ
+9. Logitech MX Master 3S - 3,500,000 VNĐ
+10. Keychron K8 Pro - 4,200,000 VNĐ
+
+**Lưu ý:** Data chỉ được tạo tự động khi database trống (lần đầu chạy). Nếu muốn reset data, xóa volume Docker:
+```bash
+docker-compose down -v
+docker-compose up -d
+```
 
 ## Nhiệm vụ cho học viên
 
