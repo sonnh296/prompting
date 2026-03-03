@@ -30,6 +30,31 @@ public class RefreshToken {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    // Manual getters/setters for compatibility
+    public LocalDateTime getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(LocalDateTime expiryDate) {
+        this.expiryDate = expiryDate;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
